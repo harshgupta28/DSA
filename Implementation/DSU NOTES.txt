@@ -1,0 +1,170 @@
+DISJOINT SET UNION      //codencode
+
+use - mst
+      no of nodes in connected components
+      set representation
+
+1 2 3 4 5   node  //node saved in index i
+3 2 2 5 2   parent[node]  // a[i]
+1->3->2<-5<-4 and 2 is pointing to itself which
+is difficult to show in figure  i.e all elements belongs to 2
+and it will be parent of whole set.
+
+find function will return parent of that whole set
+
+int find(n)
+{
+    //return the set to which node n belongs to
+    // recursive code
+    if(n==parent[n])
+        return n;
+    else
+        return find(parent[n]);
+}
+find(n)
+{
+    //iterative code
+    while(1)
+    {
+        if(n==parent[n])
+            return n;
+        else
+        n=parent[n];
+    }
+}
+_____________________________________________________________
+union function will merge both sets in which a and b belongs
+
+union(a,b)
+{
+     a=find(a)
+     b=find(b)
+
+     if(a==b) return;
+     parent[a]=b;
+}
+
+but that array is not gonna help in maintaining no of
+node in each components so we initialize all elemments of 
+array with -1 
+whenever two node are connected (index of node is node)
+parent is decremented by a[node] and a[node] contains parent
+
+1-2, 2-3, 1-3, 4-5, 5-3
+
+ index=node 1  2  3  4  5  6  7  8  
+  a[node]  -5  1  1  1  4 -1 -1 -1  // parent[node]
+
+who remains -ve is main parent of that node
+and that has total no of elements in that set
+
+find(a)
+{
+    //iterative
+    while(parent[a]>0)
+        a=parent[a];
+
+    return a;
+}
+find(a)
+{
+    //recursive
+    if(parent[a]<0)
+        return a;
+    else 
+        return find(parent[a]);
+}
+
+union(a,b)  //merge
+{
+    //these and b received are  already parent
+    parent[a]+=parent[b];
+    parent[b]=a;
+}
+
+for(int i=0;i<edges;i++)
+{
+    cin>>a>>b;
+    a=find(a),b=find(b);
+
+    if(a!=b) union(a,b);
+}
+
+but this technique is not fast so we study 2 
+faster implementation
+___________________________________________________________
+
+                PATH COMPRESSION
+
+all node point to main parent directly
+optimize running time in find function
+
+find(a)
+{
+    //iterative
+    vector<int>v;
+    while(parent[a]>0)
+    {
+        v.push_back(a);
+        a=parent[a];
+    }
+    for(int i=0;i<v.size();i++)
+        parent[v[i]]=a;
+    return a;
+}
+find(a)
+{
+    //recursive
+
+    if(parent[a]<0)
+        return a;
+    else
+    {
+        int x=find(parent[a]);
+        parent[a]=x;
+        return x;
+
+    }
+}
+    /*
+    instead of else it can be written as
+
+    return parent[a]=find(parent[a]);
+    */
+
+}
+
+_____________________________________________________________
+
+                    UNION BY RANK
+
+optimize running time in merge function
+while merge make parent who have higher no of node
+actually rank is here size of set
+
+ in main function
+ rank[n+1]; // rank array
+ for(int i=1;i<=n;i++)
+    {
+        rank[i]=1 ;// initially size of each set would be 1
+        parent[i]=-1;
+    }
+void merge(a,b)
+{
+    a=find(a);
+    b=find(b);
+    
+    if(a==b)return ;
+    if(rank[a]>rank[b])
+    {
+        parent[b]=a;
+        rank[a]+=rank[b];
+    }
+    else
+    {
+        parent[a]=b;
+        rank[b]+=rank[a];
+    }
+}
+
+

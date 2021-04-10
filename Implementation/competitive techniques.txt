@@ -1,0 +1,10 @@
+											competitive techniques
+
+
+square root decomposition - for query optimisation ---------  
+
+		https://www.geeksforgeeks.org/sqrt-square-root-decomposition-technique-set-1-introduction/
+
+		
+		
+

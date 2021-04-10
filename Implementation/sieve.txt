@@ -1,0 +1,35 @@
+#include <bits/stdc++.h> 
+#define ll long long int
+using namespace std; 
+
+vector<ll> sieve(ll n)
+{
+	bool prime[n+1]; 
+    memset(prime, true, sizeof(prime)); 
+  
+    for (int p=2; p*p<=n; p++)  
+        if (prime[p] == true)  
+            for (int i=p*p; i<=n; i += p) 
+                prime[i] = false;
+                
+	vector<ll> primeno;	 
+	for (ll p=2; p<=n; p++) 
+       if (prime[p]) 
+         primeno.push_back(p);
+          
+    return primeno;
+}
+  
+int main() 
+{ 
+    ll n=100000;
+    vector <ll> primeno;
+    primeno=sieve(n);
+    
+    for(ll i=0;i<primeno.size()-1;i++)
+    {
+    	cout<<primeno[i]<<" ";
+	}
+    
+    return 0; 
+} 

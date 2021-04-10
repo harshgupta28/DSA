@@ -1,0 +1,356 @@
+BINARY TREE & BST
+
+BINARY TREE
+
+max no of nodes in tree of height h = pow(2, h + 1) - 1
+min ------------------------------- = h + 1
+
+can use node->data or
+        (*node).data
+____________________________________________________________
+
+BINARY TREE FORMATION
+
+        - in one go
+
+struct node
+{
+    int data;
+    node *left, *right; //we have to use struct keyword in c
+};
+
+struct node *createTree()
+{
+    struct node *newnode;
+    newnode = (struct node *)malloc(sizeof(struct node));
+        //in c
+    //enter data (enter -1 for no node)
+    int x;
+    cin >> x;
+    newnode->data = x;
+    if (x == -1)
+        return 0;
+
+    //enter left child of x;
+    newnode->left = createTree();
+
+    //enter right child of x;
+    newnode->right = createTree();
+
+    return newnode;
+  }
+
+int main()
+{
+    node *root;
+    root = NULL;
+
+    root = createTree();
+}
+
+_______________________________________________________
+
+ARRAY REPRESENTATION OF COMPLETE BINARY TREE
+
+    if its not a complete binary tree then make it complete
+    by inserting blank node
+
+                    a
+                  /   \
+                 /     \   
+                b       c
+              /  \     / \
+             d     e  f   g
+                  / \
+                 h   i
+
+    // 0 based indexing
+
+index 0 1 2 3 4 5 6 7 8 9 10
+      a b c d e f g _ _ h i
+
+      if a node is at i th index
+        its 1st child = 2*i+1
+        its 2nd child = 2*i+2
+        parent =floor((i-1)/2)
+
+    // 1 based indexing
+
+index 1 2 3 4 5 6 7 8 9 10 11
+      a b c d e f g _ _ h  i
+    
+     if a node is at i th index
+        its 1st child = 2*i
+        its 2nd child = 2*i+1
+        parent =floor(i/2)
+
+its not effective in space
+
+_________________________________________________________________
+
+BINARY TREE TRAVERSAL
+
+int main()
+{
+    struct node *root;
+    preorder(root);
+}
+
+    - PRE ORDER (ROOT LEFT RIGHT) //topologically sorted
+    - IN ORDER (LEFT ROOT RIGHT) // gives sorted data 
+    - POST ORDER (LEFT RIGHT ROOT)
+    - REVERSE ORDER // descending sorted data
+void preorder(struct node *root)
+{
+    if(root==NULL)
+        return ;
+    cout<< (root->data) ;
+    preorder(root->left);
+    preorder(root->right);
+}
+void inorder(struct node *root)
+{
+    if(root==NULL)
+        return ;
+    inorder(root->left);
+    cout<< (root->data) ;
+    inorder(root->right);
+}
+void postorder(struct node *root)
+{
+    if(root==NULL)
+        return ;
+    postorder(root->left);
+    postorder(root->right);
+    cout<< (root->data) ;
+}
+
+_________________________________________________________________
+
+
+BINARY SEARCH TREE ( BST )
+
+        - all the nodes of left subtree are smaller
+          than that node
+        - all the nodes of right subtree are greater
+          than that node
+_______________________________________________________________
+
+             INSERTING NODE IN BST
+
+node* create(int data)
+{
+    node* newnode =new node();
+    newnode->data=data;
+    newnode->left=newnode->right=NULL;
+    return newnode;
+}
+node* insert(node* root,int data)
+{
+    if(root==NULL)
+    {
+        root=create(data);
+          // as root needs to be changed or 
+          //declare root as global
+          //or pass root address
+    }
+    else if(data <= root->data )
+        root->left =insert(root->left,data);
+    else
+        root->right =insert(root->right,data)
+
+    return root;
+}
+
+int main()
+{
+    node* root=NULL;
+    root=insert(root,15);
+    root=insert(root,10);
+}
+_________________________________________________________________
+
+                - SEARCHING IN BST
+
+bool search(node* root,int data)
+{
+    if(root==NULL)
+        return false;
+    else if(root->data==data)
+        return true;
+    else if(data <= root->data )
+        return search(root->left,data);
+    else
+        return search(root->right,data);
+
+}
+____________________________________________________________
+
+        CHECK IF GIVEN BINARY TREE IS BST OR NOT
+
+---------------------------------------------
+IN ORDER TRAVERSAL OF BST GIVES SORTED NODE VALUES
+
+TreeNode* pre=NULL;
+    bool isValidBST(TreeNode* root)
+    {
+        if(!root)
+            return true;
+    
+        if(! isValidBST(root->left)) return false;
+        if(pre && pre->val >= root->val) return false ;
+        pre=root;
+        if(! isValidBST(root->right)) return false;
+           
+        return true;
+    }
+
+-----------------------------------------------
+
+bool isSubtreeLesser(node,int);
+bool isSubtreeGreater(node,int);
+
+bool isBST(node* root)
+{
+    if(root==NULL)
+        return true;
+
+    if( isSubtreeLesser(root->left , root->data)
+     && isSubtreeGreater(root->right , root->data)
+     && isBST(root->left)
+     && isBST(root->right))
+
+     return true;
+     
+     else 
+        return false;
+}
+
+bool isSubtreeLesser(node* root , int value)
+{
+    if(root==NULL)
+        return true;
+    
+    if( root->data <= value 
+     && isSubtreeLesser(root->left, root->value)
+     && isSubtreeGreater(root->right , root->value))
+
+        return true;
+    else
+         return false;
+}
+bool isSubtreeGreater(node* root , int value)
+{
+    if(root==NULL)
+        return true;
+
+    if( root->data > value 
+     && isSubtreeLesser(root->left, root->value)
+     && isSubtreeGreater(root->right , root->value))
+
+        return true;
+    else
+         return false;
+}
+
+the above solution is very expensive
+
+--------------------------------------------------------
+
+            other method using min max
+
+bool checkBST(node* root ,int min,int max)
+{
+    if(root==NULL)
+        return true;
+    if(root->data >min
+    && root->data <max
+    && isBST(root->left ,min ,root->data)
+    && isBST(root->right ,root->data,max))
+
+    return true;
+
+    else
+        return false;
+
+}
+bool isBST(node* root)
+{
+    return checkBST(root , INT_MIN , INT_MAX);
+}
+
+__________________________________________________________
+
+            DELETION OF node FROM BST
+
+    - having 0 child
+    - having 1 child
+    - having 2 child
+
+   HAVING 2 CHILD
+
+      -replace node with inorder predecessor
+
+        it means largest element of left subtree
+        i.e just smaller element
+
+      -replace node with inorder successor
+
+        it means smallest element of right subtree
+        i.e just greater element
+    
+    inorder of bst gives sorted order
+
+node* delete(node* root ,int key)
+{
+    if(root==NULL)
+        return root;
+
+    if(key < root->data ) root->left = delete(root->left , key);
+    else if(key > root->data ) root->right = delete(root->right , key);
+
+    else //key founded
+    {
+        // 0 child
+        if(root->left== NULL && root->right ==NULL)
+        {
+            delete root; // root is free but it still has address
+            root=NULL;
+        }
+        // 1 child
+        else if(root->left ==NULL)
+        {
+            node *temp =root;
+            root=root->right;
+            delete temp;
+        }
+        else if(root->right ==NULL)
+        {
+            node *temp =root;
+            root=root->left;
+            delete temp;
+        }
+        // 2 child
+        else
+        {
+            node * temp= findMin(root->right);
+            root->data=temp->data;
+            root->right = delete (root->right , temp->data);
+        }
+    }
+    return root;
+}
+
+node* findMin(node* root)
+{
+	while(root->left != NULL) root = root->left;
+	return root;
+}
+
+__________________________________________________________________
+
+
+    
+
+
+

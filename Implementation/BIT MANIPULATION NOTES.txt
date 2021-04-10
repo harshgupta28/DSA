@@ -1,0 +1,75 @@
+BINARY SHIFT
+
+LEFT
+n = n<<i    is same as 
+n = n*(2^i)
+
+RIGHT
+n = n<<i    is same as 
+n = n/(2^i)
+
+___________________________________________________
+
+CHECK WHETHER i th BIT  OF (N) IS SET OR NOT
+
+  int n=12;
+  int  f=1;
+    f=f<<i;
+ int res= n & f;
+    if(res==0)
+        bit is not set
+    else 
+        bit is set
+
+_____________________________________________________
+
+COUNT NO OF SET BITS
+
+                        // time - log n
+    int n=12,count=0;
+    while(n>0)
+    {  
+        if(n & 1 !=0)
+            count++;
+        n = n>>1;
+    }
+    cout<<count;
+
+    ---------------2nd approach
+                        it will run no of times the set
+                        bit is present
+    while(n>0)
+    {
+        count++;
+
+        n=n & (n-1); //every time one set bit is dicarded
+    }
+    return count;
+
+_____________________________________________________________
+
+XOR
+    
+    --identity element = 0
+            N ^ 0 = 0
+    -- N ^ N =0
+    -- ordering of xor doesn't matter
+        a^(b^c)=(c^b)^a
+    
+_____________________________________________________________
+
+expression (n & (n-1)) can be used to discard one set 
+bit every time which is the last set bit of (n)
+
+no of bits required to represent a no is
+floor(log2(n)+1)
+
+______________________________________________________________
+
+BIT MASKING
+
+Bitwise ANDing in order to extract a subset of the bits in the value
+Bitwise ORing in order to set a subset of the bits in the value
+Bitwise XORing in order to toggle a subset of the bits in the value
+
+

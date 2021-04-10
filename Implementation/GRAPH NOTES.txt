@@ -1,0 +1,281 @@
+bfs sssp in graphs
+dfs sssp in trees
+kruskal used for mst
+dijkstra used for sssp in wtd graphs
+
+
+no of nodes at al level int level[1001];
+level[dist[child]]++;
+
+for clearing adjacency list
+  for (ll i = 1; i < n; i++)
+        adj[i].clear(), dist[i] = 0, vis[i] = 0;
+
+vector<int> ar[2001];
+bool vis[2001];
+
+in case of directed graph we use only one time push
+in adjacency list
+__________________________________________________
+
+1 - making adjacency list
+
+    void adjacency_list()
+    {
+        // creating adjacency list
+        // no of nodes=n
+        vector<int> adj[n + 1];
+        while (edges--)
+        {
+            cin >> a >> b;
+            adj[a].push_back(b);
+            adj[b].push_back(a);
+        }
+    }
+_________________________________________________
+
+2 - dfs traversal
+    
+    main call dfs(source_node = 1)
+
+    void dfs(int node)
+    {
+        // depth first search
+        // v is the node from starting
+        vis[node] = 1;          // array of visited nodes
+        cout << node << " -> "; // printing of visited
+                                // nodes in dfs
+        for (int i = 0; i < adj[node].size(); i++)
+        {
+            int child = adj[node][i];
+            if (vis[child] == 0)
+                dfs(child);
+        }
+        /* above for loop can be written as
+        for (int child : adj[node])
+        {
+            if (vis[child] == 0)
+                dfs(child);
+        }
+        */
+    }
+________________________________________________
+
+3 - no of connected components
+
+    this loop should be run in main function main call int count = 0;
+    // count for connected components
+    for (int i = 1; i <= n; i++)
+    {
+        if (vis[i] == 0)
+        {
+            dfs(i);
+            count++;
+        }
+    }
+    retun cc_count;
+    // return no of connected components
+    }
+_________________________________________________
+
+4 - single source shortest path in tree using dfs
+
+    main call for dfs(source_node,0)
+        // here we take source = node when
+        // first time when dfs is called
+        int distance[n + 1],d=0;
+// using depth first search
+void dfs(int node, int d)
+{
+    vis[node] = 1;
+    distance[node] = d;
+    for (int i = 0; i < adj[node].size(); i++)
+    {
+        int child = adj[node][i];
+        if (vis[child] == 0)
+            dfs(child, d + 1);
+    }
+}
+__________________________________________________
+
+5 - checking bipartite using dfs
+
+    two coloring method main call dfs(1, 0)
+    
+    bool dfs(int node, bool c)
+    {
+        vis[node] = 1;
+        col[node] = c;
+        for (int i = 0; i < adj[node].size(); i++)
+        {
+            int child = adj[node][i];
+            if (vis[child] == 0)
+            {
+                if (dfs(child, c ^ 1) == false)
+                    return false;
+            }
+            else if (col[node] == col[child])
+                return false;
+        }
+        return true;
+    }
+___________________________________________________________
+
+6 - cycle detection using dfs
+
+        main call dfs(1, -1);
+        passing parent of 1st node as - 1 as it does not exist
+
+        bool dfs(int node, int parent)
+        {
+            vis[node] = 1;
+            for (int i = 0; i < adj[node].size(); i++)
+            {
+                int child = adj[v][i];
+                if (vis[child] == 0)
+                {
+                    if (dfs(child, node) == true)
+                        return true;
+                }
+                else if (child != parent)
+                    return true;
+            }
+            return false
+
+            //return if graph contain cycle or not
+        }
+_____________________________________________________________________
+
+7 - checking if a graph is tree or not
+
+    check if node == edge - 1 and 
+    also if no of connected components 1s 1 or
+    not 
+____________________________________________________________________
+
+ 8 - in / out time of nodes
+
+    int timer = 1;
+    int in[n + 1], out[n + 1];
+
+    void dfs(int node)
+    {
+        vis[node] = 1;
+        in[node] = timer++;
+        for (auto &child : adj[node])
+        {
+            if (vis[child] == 0)
+                dfs(child);
+        }
+        out[node] = timer++;
+    }
+
+    if we want to check if node a lies in subtree of
+    node b then it must satisfy both
+
+    in[node root b]<in[node child a] and
+    out[node root b]> out[node child a]
+
+___________________________________________________________
+
+9 -diameter of tree or longest distance btw two nodes
+
+    first find node Y which is at max disance from
+    give node X and then find node Z which is at max
+    distance from Y and ans is distance btw Y and Z
+    requires two dfs calls int ans_node,ans_dist;
+    
+    ans_node = 1;
+    ans_dist = 0;
+    dfs(1, 0);
+
+    for (ll i = 1; i <= n; i++)
+        vis[i] = 0;
+    ans_dist = 0;
+    dfs(ans_node, 0);
+    cout << ans_dist;
+
+    void dfs(ll node, int d)
+    {
+        vis[node] = 1;
+        if (ans_dist < d)
+            ans_node = node, ans_dist = d;
+
+        for (auto &child : ar[node])
+            if (vis[child] == 0)
+                dfs(child, d + 1);
+    }
+____________________________________________________________
+
+10 - subtree size O(n)
+
+    int subsize[n + 1]
+
+    int dfs(int node)
+    {
+        vis[node] = 1;
+        int curr_size = 1;
+        for (auto &child : adj[node])
+        {
+            if (vis[child] == 0)
+                curr_size += dfs(child);
+        }
+
+        subsize[node] = curr_size;
+        return curr_size;
+    }
+_____________________________________________________________
+
+11 - single source shortest path in graph using bfs
+
+    have to maintain a distance array
+    dist[n+1]={0}
+    for unweighted graph O(n+log e)
+    void bfs(int node)
+    {
+        vis[node] = 1;
+        queue<int> q;
+        q.push(node);
+        while (!q.empty())
+        {
+            int curr = q.front();
+            //cout << curr << " ";//bfs traversal
+            q.pop();
+            for (auto &child : adj[curr])
+                if (vis[child] == 0)
+                {
+                    q.push(child);
+                    dist[child] = dist[curr] + 1;
+                    vis[child] = 1;
+                }
+        }
+    }
+ _____________________________________________________________________
+
+12 - find bridges
+         main call dfs(1, -1) int in[n + 1] = low[n + 1] = {0}
+
+    void dfs(int node, int parent)
+    {
+        vis[node] = 1;
+        in[node] = low[node] = 1;
+        for (auto child : ar[node])
+        {
+            if (child == parent)
+                continue;
+            else if (vis[child] == 1)
+            {
+                // it's a back edge, it's a ancestor
+                low[node] = min(low[node], low[child]);
+            }
+            else
+            {
+                dfs(child, node);
+
+                if (in[node] < low[child])
+                    cout << node << "--" << child << " is a bridge" << endl;
+
+                low[node] = min(low[node], low[child]);
+            }
+        }
+    }

@@ -1,0 +1,18 @@
+DYNAMIC PROGRAMMING
+    = choice + optimization
+    
+dp can be achived by memoization AND top-down approach
+
+MEMOIZATION = RECURSION + USE OF MEMORY
+
+TOP-DOWN 
+
+no use of recursion bcoz in some cases stack of recurion may 
+be very big which gives error (stack overflow error)
+
+so we write iterative solution 
+base case chnanges to initialization
+
+how to think for base case - think for smallest valid input
+
+

@@ -1,0 +1,73 @@
+divide and conquer
+greedy
+dynamic programming
+backtracking
+branch and brown
+
+------------SORTING ALGORITHMS-----------
+
+bubble sorting  - simplest one is compared with the other
+
+    void bubbleSort(int arr[], int n)  
+    {  
+        for (i = 0; i < n-1; i++)       // the last value of i is no of rounds-1 used for sorting
+        {
+            for (j = 0; j < n-1-i; j++)   // Last i elements are already in place  
+            {
+                bool swapped = false;
+                if (arr[j] > arr[j+1])  
+                {
+                     swap(&arr[j], &arr[j+1]); 
+                     swapped = true  // modification
+                }
+            } 
+            if(swapped==false)  // modification  // as no swapping occurs in inner loop
+                break;          // modification
+        }
+    }  
+
+SELECTION SORT - smallest sabse pehle , the way we sort in our mind
+                  i.e find minimum and place it at the beginning of array // minimum swapping algorithm
+
+            void selectionSort(int arr[], int n)  
+            {  
+                int i, j, min_idx;  
+            
+                // One by one move boundary of unsorted subarray  
+                for (i = 0; i < n-1; i++)  
+                {  
+                    min_idx = i;  // Find the minimum element in unsorted array  i.e element of i th index
+                    for (j = i+1; j < n; j++)  
+                        if (arr[j] < arr[min_idx])  
+                            min_idx = j;  
+                   
+                    swap(&arr[min_idx], &arr[i]);   // Swap the found minimum element with the first element  
+                }  
+            }  
+ 
+ INSERTION SORT - PLAYING CARDS - placed at correct position
+
+        for (i = 1; i < n; i++) 
+        {  
+            key = arr[i];  
+            j = i - 1;  
+    
+                    /* Move elements of arr[0..i-1], that are  
+                    greater than key, to one position ahead  
+                    of their current position */
+            while (j >= 0 && arr[j] > key) 
+            {  
+                arr[j + 1] = arr[j];  
+                j--;  
+            }  
+            arr[j + 1] = key;  
+        } 
+
+QUICKSORT  - 
+
+HEAPSORT
+
+    full binary tree - no space for node in that level 
+    complete bt - no in between empty elements in array representation of binary tree // height = log n
+
+    complete is subset of full
